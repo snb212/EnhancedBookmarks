@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="/EnhancedBookmarks/js/jquery-1.11.1.js"></script>
+<script src="/EnhancedBookmarks/js/bookmarking.js"></script>
+</head>
+<body>
+
+<h1 id="welcomeText">Hello World</h1>
+
+<script>
+$( document ).ready(function() {
+	var welcomeText = $("#welcomeText");
+		$.ajax({
+			type : 'post',
+			url : 'http://localhost:8080/EnhancedBookmarks/HelloWorld',
+			data : {"function":"getUsername"},
+			success : function(data) {
+				alert(data);
+			},
+			error : function() {
+				alert('error');
+			}
+		});
+});
+</script>
+</body>
+</html>

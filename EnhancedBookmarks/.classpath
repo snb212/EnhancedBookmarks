@@ -24,5 +24,6 @@
 			<attribute name="javadoc_location" value="http://shiro.apache.org/static/1.2.3/apidocs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/shiro.ini"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

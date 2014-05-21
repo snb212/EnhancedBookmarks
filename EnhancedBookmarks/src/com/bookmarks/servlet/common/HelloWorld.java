@@ -11,7 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
 
 import com.bookmarks.servlet.mysql.JDBCMySQLConnection;
 
@@ -33,7 +35,10 @@ public class HelloWorld extends HttpServlet {
         
         //create bookmark service object
         
-        
+        //authentication 
+        Factory<org.apache.shiro.mgt.SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro.ini");
+        SecurityManager securityManager = (SecurityManager) factory.getInstance();
+        SecurityUtils.setSecurityManager((org.apache.shiro.mgt.SecurityManager) securityManager);
         
         // TODO Auto-generated constructor stub
     }
@@ -55,16 +60,21 @@ public class HelloWorld extends HttpServlet {
 		// TODO Auto-generated method stub
 		String username = request.getParameter("username");
 		String bookmark = request.getParameter("bookmark");
-		System.out.println("username: " + username + " | bookmark: " + bookmark);
-		
-		bookmarkService.addTestRow(username, bookmark);
-		
-		Subject currentUser = SecurityUtils.getSubject();
-		
+		String function = request.getParameter("function");
 		PrintWriter out = response.getWriter();
-		out.println(username);
-		out.println(bookmark);
-		out.println(currentUser);
+		
+		if(username != null && bookmark != null){
+			System.out.println("username: " + username + " | bookmark: " + bookmark);
+			bookmarkService.addTestRow(username, bookmark);
+			out.println(username);
+			out.println(bookmark);
+		}
+		
+		if(function.equals("getUsername")){
+			Subject currentUser = SecurityUtils.getSubject();
+			out.println(currentUser.getSession());	
+		}
+		
 		out.close();
 	}
 

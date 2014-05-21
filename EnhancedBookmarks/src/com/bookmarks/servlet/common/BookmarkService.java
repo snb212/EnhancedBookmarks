@@ -33,6 +33,7 @@ public class BookmarkService {
 			if (connection != null) {
 				try {
 					connection.close();
+					System.out.println("mysql connection closed");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}

@@ -1,0 +1,16 @@
+Create a database for users + roles
+
+CREATE TABLE IF NOT EXISTS `roles_permissions` (
+ `roleper` char(50) NOT NULL,
+ `role_name` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `users` (
+ `username` char(50) NOT NULL,
+ `password` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS `user_roles` (
+ `role_name` char(50) NOT NULL,
+ `username` char(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
