@@ -14,7 +14,7 @@ function() {
 		});
 	});
 	$("#postButton").click(function() {
-		var username = $("#username").val();
+		var username = $("#username-book").val();
 		var bookmark = $("#bookmark").val();
 		if (username && bookmark) {
 			$.ajax({
@@ -23,6 +23,23 @@ function() {
 				data : {"username":username, "bookmark":bookmark},
 				success : function(data) {
 					alert(data);
+				},
+				error : function() {
+					alert('error');
+				}
+			});
+		}
+	});
+	$("#submit").click(function() {
+		var username = $("#username").val();
+		var password = $("#password").val();
+		if (username && password) {
+			$.ajax({
+				type : 'post',
+				url : 'http://localhost:8080/EnhancedBookmarks/HelloWorld',
+				data : {"function":"registerUser", "username":username, "password":password},
+				success : function(data) {
+					registerSuccess(data);
 				},
 				error : function() {
 					alert('error');
@@ -40,3 +57,9 @@ function() {
 	 * alert("Data: " + data + "\nStatus: " + status); }); });
 	 */
 });
+
+function registerSuccess(data){
+	alert("Registration Successful! " + data);
+	//Send user back to referrer
+	document.location.href = document.referrer;
+}
