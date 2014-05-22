@@ -6,23 +6,14 @@
 </head>
 <body>
 
-<h1 id="welcomeText">Hello World</h1>
+<a href="/EnhancedBookmarks/">Home</a>
+<p/>
+<h1>For authorized users only, shhhh<span id="welcomeName"></span></h1>
+<p/>
+<span id="bookmarkHeader">Add a new bookmark: </span><input type="text" id="bookmarkURL"/><button id="addBookmarkButton">Submit</button>
+<br/><p/> 
+<button id="getBookmarks">Get Bookmarks</button>
 
-<script>
-$( document ).ready(function() {
-	var welcomeText = $("#welcomeText");
-		$.ajax({
-			type : 'post',
-			url : 'http://localhost:8080/EnhancedBookmarks/HelloWorld',
-			data : {"function":"getUsername"},
-			success : function(data) {
-				alert(data);
-			},
-			error : function() {
-				alert('error');
-			}
-		});
-});
-</script>
+<table/>
 </body>
 </html>

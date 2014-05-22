@@ -14,3 +14,18 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
  `role_name` char(50) NOT NULL,
  `username` char(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+Create user table;
+CREATE TABLE IF NOT EXISTS userdb (
+ id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ bookmarkname VARCHAR(255) NOT NULL,
+ url varchar(255) NOT NULL,
+ img LONGBLOB,
+ timesVisited varchar(255),
+ Timestamp TIMESTAMP,
+ Datetime DATETIME 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert bookmark row:
+insert into userdb(bookmarkname, url, img) values ("google", "www.google.com", "imgpath");
