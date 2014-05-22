@@ -13,6 +13,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
@@ -61,29 +66,88 @@ public class HelloWorld extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String username = request.getParameter("username");
-		String bookmark = request.getParameter("bookmark");
+		//String username = request.getParameter("username");
+		//String bookmark = request.getParameter("bookmark");
 		String function = request.getParameter("function");
+		System.out.println("Called function: " + function);
 		PrintWriter out = response.getWriter();
 		
-		if(username != null && bookmark != null){
-			System.out.println("username: " + username + " | bookmark: " + bookmark);
-			bookmarkService.addTestRow(username, bookmark);
-			out.println(username);
-			out.println(bookmark);
-		}
+//		if(username != null && bookmark != null){
+//			String username = request.getParameter("username");
+//			String bookmark = request.getParameter("bookmark");
+//			System.out.println("username: " + username + " | bookmark: " + bookmark);
+//			bookmarkService.addTestRow(username, bookmark);
+//			out.println(username);
+//			out.println(bookmark);
+//		} 
 		
 		if(function.equals("getUsername")){
 			Subject currentUser = SecurityUtils.getSubject();
-			out.println(currentUser.getSession());	
+			if(currentUser.getPrincipal() != null){
+				out.println(currentUser.getPrincipal());
+			}
 		}
-		if(function.equals("registerUser")){
-			//String username = request.getParameter("username");
+		else if(function.equals("registerUser")){
+			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			registerUser(username, password);
 		}
-		
+		else if(function.equals("loginUser")){
+			String username = request.getParameter("username");
+			String password = request.getParameter("password");
+			String rememberMe = request.getParameter("rememberMe");
+			boolean rememberMeBool = (rememberMe.equals("true")) ? true : false;
+			String message = loginUser(username, password, rememberMeBool);
+			out.println(message);
+		}
+		else if(function.equals("logout")){
+			Subject currentUser = SecurityUtils.getSubject();
+			Object user = currentUser.getPrincipal();
+			currentUser.logout();
+			System.out.println(user + " has been logged out");
+			out.println("Logout Successful");
+		}
+		else {
+		out.println("No associated commands found for: " + request.getRequestURL());
+		}
 		out.close();
+	}
+
+	private String loginUser(String username, String password, boolean rememberMe) {
+		System.out.println("attempting to log in " + username);
+		Subject currentUser = SecurityUtils.getSubject();
+		System.out.println("Authentication: " + currentUser.isAuthenticated());
+		if ( !currentUser.isAuthenticated() ) {
+		    //collect user principals and credentials in a gui specific manner 
+		    //such as username/password html form, X509 certificate, OpenID, etc.
+		    //We'll use the username/password example here since it is the most common.
+		    UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+
+		    //this is all you have to do to support 'remember me' (no config - built in!):
+		    token.setRememberMe(rememberMe);
+		    
+		    try {
+		    	currentUser.login(token);
+		    	System.out.println("User "+username+" logged in successfully");
+			    return "User "+username+" logged in successfully";
+		        //if no exception, that's it, we're done!
+		    } catch ( UnknownAccountException uae ) {
+		    	System.out.println("User account, "+username+", in not registered. Please Register an account.");
+		    	return "User account, "+username+", in not registered. Please Register an account.";
+		    } catch ( IncorrectCredentialsException ice ) {
+		    	System.out.println("password given does not match user account: " + username + ". Please try again");
+		        return "password given does not match user account: " + username + ". Please try again";
+		    } catch ( LockedAccountException lae ) {
+		    	System.out.println("This account has been locked. Please contact the system administrator");
+		        return "This account has been locked. Please contact the system administrator";
+		    } catch ( AuthenticationException ae ) {
+		    	System.out.println("An unexpected authentication condition occured");
+		    	return "An unexpected authentication condition occured";
+		        //unexpected condition - error?
+		    }
+		}
+		System.out.println("Something bad happened. Contact System administrator");
+		return "Something bad happened. Contact System administrator";
 	}
 
 	private boolean registerUser(String username, String password) {
@@ -101,7 +165,7 @@ public class HelloWorld extends HttpServlet {
 			if(response == 0){
 				System.out.println("Query returned nothing");
 			} else {
-				System.out.println("User registration sucessful, user " + username + " added." );
+				System.out.println("User registration successful, user " + username + " added." );
 				connection.close();
 				return true;
 			}
