@@ -1,6 +1,7 @@
 package com.bookmarks.servlet.common;
 
 import com.bookmarks.servlet.user.*;
+import com.bookmarks.servlet.snapshot.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -77,15 +78,22 @@ public class BookmarkService extends HttpServlet {
 		else if(function.equals("addBookmark")){
 			String bookmark= request.getParameter("bookmark");
 			Subject currentUser = SecurityUtils.getSubject();
-			UserUtils.addBookmark(currentUser.getPrincipal(), bookmark);
+			int bookmarkId = UserUtils.addBookmark(currentUser.getPrincipal(), bookmark);
+			String bookmarkName = UserUtils.getBookmarkName(currentUser.getPrincipal(), bookmark); 
 			System.out.println("Bookmark " + bookmark + "added successfully.");
-			out.println("Bookmark " + bookmark + "added successfully.");
+			out.println("Bookmark added");
+			//String screenPath = WebpageSnapshot.takeScreenshot(bookmark, "C:\\Users\\Seth\\git\\EnahncedBookmarks\\EnhancedBookmarks\\WebContent\\images\\"+bookmarkName+".png");
+//			WebpageSnapshot.takeScreenshot(bookmark, "C:\\Compiled Java Resources\\phantomjs-screenshots\\"+bookmarkName+".png");
 		} 
 		else if(function.equals("getBookmarks")){
 			Subject currentUser = SecurityUtils.getSubject();
 			String bookmarks = UserUtils.getBookmarks(currentUser.getPrincipal());
 			System.out.println("Bookmarks returned successfully: " + bookmarks);
 			out.println(bookmarks);
+		} else if(function.equals("getBookmarkImage")){
+			String bookmark = request.getParameter("bookmark");
+			String imgPath = UserUtils.getBookmarkScreenshot(bookmark);
+			out.println(imgPath);
 		}
 		else {
 		out.println("No associated commands found for: " + request.getRequestURL());

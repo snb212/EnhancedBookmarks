@@ -3,31 +3,45 @@
 <head>
 <script src="js/jquery-1.11.1.js"></script>
 <script src="js/bookmarking.js"></script>
+<script src="js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/bootstrap.css" />
 </head>
-<body>
+<body style="width:100%">
+	<div class="container">
+		<div class="header-container row">
+			<div id="header" class="fixed-header">
+				<div class="header-home-container col-md-2">
+					<a class="header-text" href="/EnhancedBookmarks/">Home</a>
+				</div>
+				<div class="col-md-5">
+				</div>
+				<div class="col-md-3">
+				</div>
+				<div class="header-user-container col-md-2">
+				 <a class="register-button header-text" href="register.html">Register</a> <a
+						class="logout-button header-text">Logout</a>
+				</div>
+			</div>
+		</div>
+		
+		<div id="body-content-container" style="height: 1000px;">
+			<h1>Login Page</h1>
 
-<h1>Enhanced Bookmark Testing</h1>
+			<span>Welcome</span> <span id="welcomeName"></span>
 
-<span>Welcome</span><span id="welcomeName"></span>
+			<h3>Username</h3>
+			<input id="username" type="text" /> <br />
+			<h3>Password</h3>
+			<input id="password" type="password" onkeydown="if (event.keyCode == 13) loginUser();"/> <br /> <input
+				type="checkbox" id="rememberMe" value="true" />Remember Me? <br />
+			<button class="login-button">Login</button>
+			<p />
+			<br />
 
-<h3>Username</h3>
-<input id="username" type="text"/> 
-<br/>
-<h3>Password</h3>
-<input id="password" type="password"/> 
-<br/>
-<input type="checkbox" id="rememberMe" value="true"/>Remember Me? 
-<br/>
-<button id="loginButton" >Login</button> 
-<p/>
-<br/>
-
-<a href="register.html">register</a>
-<br/>
-<button id="logoutButton">Logout</button>
-<br/>
-<a href=".">Home</a>
-<br/>
-
+		</div>
+	</div>
 </body>
 </html>

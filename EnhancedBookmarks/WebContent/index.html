@@ -3,29 +3,98 @@
 <head>
 <script src="js/jquery-1.11.1.js"></script>
 <script src="js/bookmarking.js"></script>
+<script src="js/bootstrap.js"></script>
+<script type='text/javascript' src='js/jquery.iosslider.js'></script>
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/bootstrap.css" />
 </head>
 <body>
+	<div class="container">
+		<div class="header-container row">
+			<div id="header" class="fixed-header">
+				<div class="header-upper-border"></div>
+				<div class="header-home-container col-md-2">
+					<a class="header-text" href="/EnhancedBookmarks/">Home</a>
+				</div>
+				<!-- 				<div  class="col-md-2 col-md-offset-6"> -->
+				<div class="col-md-6">
+					<div class="add-bookmark-container" style="display: none">
+						<div class="col-md-3">
+							<span class="add-boomark-header header-text">Add a Bookmark</span> 
+						</div>
+						<div class="col-md-7">
+							<input type="text" id="bookmarkURL" />
+						</div>
+						<div class="col-md-2">
+							<div class="add-bookmark-button add-bookmark-header-submit">
+								<a class="header-text-input" href="#">ADD</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<div class="header-welcome-container">
+						<span class="welcome-message header-text">Welcome</span><span
+							class="welcome-name header-text"></span>
+					</div>
+				</div>
+				<div class="header-user-container col-md-2">
+					<a class="login-button header-text" href="login.html">Login</a> <a
+						class="register-button header-text" href="register.html">Register</a>
+					<a class="logout-button header-text">Logout</a>
+				</div>
+			</div>
+		</div>
 
-<h1>Enhanced Bookmark Testing</h1>
+		<div id="body-content-container" style="height: 1000px;">
+			<span class="bookmark-title">Enhanced Bookmark Testing</span> <br />
 
-<span>Welcome</span><span id="welcomeName"></span><br/><p/>
+			<br />
+			<p />
 
-<!-- <h3>Username</h3> -->
-<!-- <input id="username-book" type="hidden" value="username"></input> <br/> -->
-<!-- <h3>Bookmark</h3> -->
-<!-- <input id="bookmark" type="hidden" value="password"></input><br/> -->
+			<!-- <h3>Username</h3> -->
+			<!-- <input id="username-book" type="hidden" value="username"></input> <br/> -->
+			<!-- <h3>Bookmark</h3> -->
+			<!-- <input id="bookmark" type="hidden" value="password"></input><br/> -->
 
 
-<!-- <button id="getButton">Get</button><br/> -->
-<!-- <p/> -->
-<!-- <button id="postButton">Post</button>  -->
-<!-- <p/> -->
-<!-- <br/> -->
-<a href="auth/">Member-only Content</a><br/><p/>
+			<!-- <button id="getButton">Get</button><br/> -->
+			<!-- <p/> -->
+			<!-- <button id="postButton">Post</button>  -->
+			<!-- <p/> -->
+			<!-- <br/> -->
+			<!-- 		<a href="auth/">Member-only Content</a> <br /> -->
 
-<a href="login.html">Login</a><p/>
-<a href="register.html">register</a><p/>
-<button id="logoutButton">Logout</button>
+			<!-- 			<div class="add-bookmark-container"> -->
+			<!-- 				<span class="add-bookmark-header">Add a new bookmark: </span> <input -->
+			<!-- 					type="text" id="bookmarkURL" /> -->
+			<!-- 				<button class="add-bookmark add-bookmark-button">Submit</button> -->
+			<!-- 			</div> -->
 
+			<table />
+			<button class="get-bookmarks-button" style="display: none">Get
+				Bookmarks</button>
+
+			<p />
+			<div class="slideshow-container">
+				<!-- slider container -->
+				<div class='iosslider'>
+
+					<!-- slider -->
+					<div class='slider'>
+
+						<!-- slides -->
+						<div class='slide'>...</div>
+						<div class='slide'>...</div>
+						<div class='slide'>...</div>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

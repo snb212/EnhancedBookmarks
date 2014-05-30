@@ -29,3 +29,27 @@ CREATE TABLE IF NOT EXISTS userdb (
 
 insert bookmark row:
 insert into userdb(bookmarkname, url, img) values ("google", "www.google.com", "imgpath");
+
+
+Table creation for bookmark_index and userdb:
+
+CREATE TABLE IF NOT EXISTS bookmark_index (
+ id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+ url varchar(255) NOT NULL,
+ dateAdded TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ img VARCHAR(2083),
+ imgUpdated TIMESTAMP,
+ PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE IF NOT EXISTS userdb (
+ id INTEGER UNSIGNED NOT NULL,
+ bookmarkname VARCHAR(255) NOT NULL,
+ url VARCHAR(2083) NOT NULL,
+ timesVisited varchar(255),
+ lastVist TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+ tags VARCHAR(2083)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+insert into bookmark_index(url) values ("www.google.com");
+insert into userdb(bookmarkname, url, img) values ("google", "www.google.com", "imgpath");

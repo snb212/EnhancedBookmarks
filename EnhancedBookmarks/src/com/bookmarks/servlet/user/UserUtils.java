@@ -2,6 +2,8 @@ package com.bookmarks.servlet.user;
 
 import com.bookmarks.servlet.common.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.bookmarks.servlet.mysql.JDBCMySQLConnection;
+import com.bookmarks.servlet.snapshot.WebpageSnapshot;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 
 public class UserUtils {
@@ -48,21 +51,25 @@ public class UserUtils {
 			} catch (UnknownAccountException uae) {
 				System.out.println("User account, " + username
 						+ ", in not registered. Please Register an account.");
+				uae.printStackTrace();
 				return "User account, " + username
 						+ ", in not registered. Please Register an account.";
 			} catch (IncorrectCredentialsException ice) {
 				System.out
 						.println("password given does not match user account: "
 								+ username + ". Please try again");
+				ice.printStackTrace();
 				return "password given does not match user account: "
 						+ username + ". Please try again";
 			} catch (LockedAccountException lae) {
 				System.out
 						.println("This account has been locked. Please contact the system administrator");
+				lae.printStackTrace();
 				return "This account has been locked. Please contact the system administrator";
 			} catch (AuthenticationException ae) {
 				System.out
 						.println("An unexpected authentication condition occured");
+				ae.printStackTrace();
 				return "An unexpected authentication condition occured";
 				// unexpected condition - error?
 			}
@@ -116,7 +123,7 @@ public class UserUtils {
 		Statement statement = null;
 		String query = "CREATE TABLE IF NOT EXISTS userdb_"
 				+ username
-				+ " ( id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, bookmarkname VARCHAR(255) NOT NULL, url varchar(255) NOT NULL, img LONGBLOB, timesVisited varchar(255), Timestamp TIMESTAMP, Datetime DATETIME ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
+				+ " ( id INTEGER UNSIGNED NOT NULL, bookmarkname VARCHAR(255) NOT NULL, url VARCHAR(2083) NOT NULL, timesVisited varchar(255), lastVist TIMESTAMP DEFAULT CURRENT_TIMESTAMP, tags VARCHAR(2083))ENGINE=InnoDB DEFAULT CHARSET=latin1;";
 
 		statement = connection.createStatement();
 		response = statement.executeUpdate(query);
@@ -124,14 +131,14 @@ public class UserUtils {
 		System.out.println("Table for " + username + " created successfully");
 	}
 
-	public static boolean addBookmark(Object username, String bookmark) {
+	public static int addBookmark(Object username, String bookmark) {
 		int response;
 		Connection connection = null;
 		Statement statement = null;
 
-		String query = "INSERT INTO userdb_" + username.toString()
-				+ " (bookmarkname, url, timestamp, datetime) VALUES ('"
-				+ username + "', '" + bookmark + "',TIMESTAMP, DATETIME);";
+		String query = "INSERT INTO bookmark_index" + " (url) VALUES ('"
+					+ bookmark + "');";
+	
 		System.out.println("Building query: " + query);
 		try {
 			connection = JDBCMySQLConnection.getConnection();
@@ -144,8 +151,10 @@ public class UserUtils {
 			} else {
 				System.out.println("Successful addition of " + bookmark
 						+ " for " + username.toString());
+				int id = getBookmarkId(bookmark, statement);
+				addUserBookmark(id, username.toString(), bookmark, statement);
 				connection.close();
-				return true;
+				return id;
 			}
 
 		} catch (MySQLSyntaxErrorException e) {
@@ -161,16 +170,106 @@ public class UserUtils {
 				}
 			}
 		}
-		return false;
+		return -1;
+
+	}
+	
+	public static String getBookmarkName(Object username, String bookmark) {
+		Connection connection = null;
+		Statement statement = null;
+
+		String query = "SELECT * FROM userdb_" + username.toString() + " WHERE url='" + bookmark + "';";
+	
+		System.out.println("Building query: " + query);
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			ResultSet responseSet = statement.executeQuery(query);
+			String bookmarkName = "";
+			
+			if (responseSet.next()) {
+				bookmarkName = responseSet.getString(2);
+				System.out.println("Returning bookmark name " + bookmarkName + " for "
+						+ username.toString());
+				return bookmarkName;
+			} else {
+				System.out.println("Unable to get bookmark name for " + bookmark);
+				return "";
+			}
+
+		} catch (MySQLSyntaxErrorException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return "";
+	}
+
+	private static int addUserBookmark(int id, String username,
+			String bookmark, Statement statement) throws SQLException {
+		URL page;
+		String pageName = "";
+		String query;
+		try {
+			page = new URL(bookmark);
+			pageName = page.getHost();
+			query = "INSERT INTO userdb_" + username
+					+ " (id, bookmarkname, url) VALUES ('" + id + "', '"
+					+ pageName + "', '" + bookmark + "');";
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+			query = "INSERT INTO userdb_" + username
+					+ " (id, bookmarkname, url) VALUES ('" + id + "', '"
+					+ bookmark + "', '" + bookmark + "');";
+		}
+
+		System.out.println("Building query: " + query);
+
+		int responseSet = statement.executeUpdate(query);
+
+		if (responseSet == 1) {
+			System.out.println("Successfully add bookmark " + bookmark
+					+ " for user " + username);
+			return responseSet;
+		} else {
+			System.out.println("Unable to add bookmark " + bookmark
+					+ " to userdb for " + username);
+			return responseSet;
+		}
+
+	}
+
+	private static int getBookmarkId(String bookmark, Statement statement)
+			throws SQLException {
+		String query = "SELECT * FROM bookmark_index where `url`='" + bookmark
+				+ "';";
+		System.out.println("Building query: " + query);
+		ResultSet responseSet = statement.executeQuery(query);
+
+		if (responseSet.next()) {
+			int id = responseSet.getInt(1);
+			System.out.println("Successfully returned bookmarks for id " + id);
+			return id;
+		} else {
+			System.out.println("No bookmark found in userdb_");
+			return -1;
+		}
 
 	}
 
 	public static String getBookmarks(Object username) {
-		int response;
 		Connection connection = null;
 		Statement statement = null;
 
-		String query = "SELECT *, CASE WHEN `Timestamp`='0000-00-00 00:00:00' THEN `Timestamp` END as 'Tiemstamp' FROM userdb_"
+		String query = "SELECT * FROM userdb_"
 				+ username.toString() + ";";
 		System.out.println("Building query: " + query);
 		try {
@@ -220,5 +319,44 @@ public class UserUtils {
 
 	}
 
-	
+	public static String getBookmarkScreenshot(String bookmark) {
+		Connection connection = null;
+		Statement statement = null;
+
+		String query = "SELECT * FROM bookmark_index WHERE url='" + bookmark + "';";
+		System.out.println("Building query: " + query);
+		try {
+			connection = JDBCMySQLConnection.getConnection();
+			statement = connection.createStatement();
+			ResultSet responseSet = statement.executeQuery(query);
+			String imgPath = "";
+			
+			if (responseSet.next()) {
+				imgPath = responseSet.getString(4);
+				responseSet.close();
+			} 
+			if(imgPath == null || imgPath.isEmpty()){
+				int bookmarkId = UserUtils.getBookmarkId(bookmark, statement);
+				imgPath = WebpageSnapshot.takeScreenshot(bookmark, "C:\\Users\\Seth\\git\\EnahncedBookmarks\\EnhancedBookmarks\\WebContent\\images\\"+ bookmarkId +".png");
+			}
+			return imgPath;
+
+		} catch (MySQLSyntaxErrorException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return "";
+	}
+
 }

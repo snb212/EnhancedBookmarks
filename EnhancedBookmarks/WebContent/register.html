@@ -3,9 +3,27 @@
 <head>
 <script src="js/jquery-1.11.1.js"></script>
 <script src="js/bookmarking.js"></script>
+<script src="js/bootstrap.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/bootstrap.css" />
 </head>
 <body>
 
+	<div class="header-container">
+		<div id="header" class="fixed-header">
+			<div class="header-home-container col-md-8">
+				<a href="/EnhancedBookmarks/">Home</a>
+			</div>
+			<div class="header-user-container col-md-4">
+				<a class="login-button" href="login.html">Login</a> <a
+					class="register-button" href="register.html">Register</a> <a
+					class="logout-button">Logout</a>
+			</div>
+		</div>
+	</div>
+	<div id="body-content-container" style="height:1000px;"">
 <h1>Register an account</h1>
 
 <h3>Username</h3>
@@ -14,8 +32,8 @@
 <input id="password" type="text"/> <br/>
 
 <p/>
-<button id="submit">Register</button>
+<button class="registration-submit">Register</button>
 
-<script></script>
+</div>
 </body>
 </html>

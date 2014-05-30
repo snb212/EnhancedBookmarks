@@ -3,17 +3,36 @@
 <head>
 <script src="/EnhancedBookmarks/js/jquery-1.11.1.js"></script>
 <script src="/EnhancedBookmarks/js/bookmarking.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="/EnhancedBookmarks/css/style.css" />
 </head>
 <body>
 
-<a href="/EnhancedBookmarks/">Home</a>
-<p/>
-<h1>For authorized users only, shhhh<span id="welcomeName"></span></h1>
-<p/>
-<span id="bookmarkHeader">Add a new bookmark: </span><input type="text" id="bookmarkURL"/><button id="addBookmarkButton">Submit</button>
-<br/><p/> 
-<button id="getBookmarks">Get Bookmarks</button>
+	<div class="header-container">
+		<div id="header" class="fixed-header">
+			<a href="/EnhancedBookmarks/">Home</a>
+			<div class="header-user-container">
+				<a id="loginButton" href="login.html">Login</a> 
+				<a id="registerButton" href="register.html">register</a>
+				<a id="logoutButton">Logout</a>
+			</div>
+		</div>
+	</div>
 
-<table/>
+	<p />
+	<h1>
+		For authorized users only, shhhh<span id="welcomeName"></span>
+	</h1>
+	<p />
+	<span id="bookmarkHeader">Add a new bookmark: </span>
+	<input type="text" id="bookmarkURL" />
+	<button id="addBookmarkButton">Submit</button>
+	<br />
+	<p />
+	<button id="getBookmarks">Get Bookmarks</button>
+
+	<div style="height: 1000px; width: 300px; background-color: black;"
+		id="placeholder"></div>
+	<table />
 </body>
 </html>
