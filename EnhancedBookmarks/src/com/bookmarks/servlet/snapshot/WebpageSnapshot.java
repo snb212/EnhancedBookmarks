@@ -24,7 +24,13 @@ public class WebpageSnapshot {
 			process.waitFor();
 			//UserUtils.
 			System.out.println("Screenshot of site " + url + " taken: " + file);
-			return file;
+			if(resizeImage(file)){
+				System.out.println("Successfully resized the file " + file);
+				return file;
+			} else {
+				System.out.println("Unable to resize the file " + file);
+				return "";
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -33,5 +39,26 @@ public class WebpageSnapshot {
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	private static boolean resizeImage(String file) {
+		ProcessBuilder pb = new ProcessBuilder("C:\\Compiled Java Resources\\ImageMagick-6.8.9\\ImageMagick-6.8.9-1-Q16-x64-dll.exe", "convert", file, "-resize 245x150", file);
+		ProcessBuilder.Redirect error = pb.redirectError();
+		ProcessBuilder.Redirect out = pb.redirectOutput();
+		ProcessBuilder.Redirect in = pb.redirectInput();
+		Process process;
+		
+		try {
+			process = pb.start();			
+			process.waitFor();
+			return true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

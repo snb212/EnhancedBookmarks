@@ -135,10 +135,19 @@ public class UserUtils {
 		int response;
 		Connection connection = null;
 		Statement statement = null;
+		// "If ((SELECT * FROM bookmark_index WHERE url='" + bookmark
+		// +"') < 1) THEN ()""
+		// String query = "INSERT INTO bookmark_index" + " (url) VALUES ('"
+		// + bookmark + "');";
+		// INSERT INTO bookmark_index" + " (url) VALUES ('"+ bookmark + "')
+		// String query = "SELECT * FROM bookmark_index WHERE url='" + bookmark
+		// + "' case when != 1 (INSERT INTO bookmark_index" + " (url) VALUES ('"
+		// + bookmark + "'));";
+		String query = "INSERT INTO bookmark_index (url) SELECT '"
+				+ bookmark
+				+ "' FROM dual WHERE NOT EXISTS (SELECT * FROM bookmark_index WHERE url='"
+				+ bookmark + "');";
 
-		String query = "INSERT INTO bookmark_index" + " (url) VALUES ('"
-					+ bookmark + "');";
-	
 		System.out.println("Building query: " + query);
 		try {
 			connection = JDBCMySQLConnection.getConnection();
@@ -147,15 +156,17 @@ public class UserUtils {
 
 			if (response == 0) {
 				System.out.println("Insert of " + bookmark + " for "
-						+ username.toString() + " ran into an issue");
+						+ username.toString()
+						+ " ran into an issue, bookmark already exists");
 			} else {
 				System.out.println("Successful addition of " + bookmark
-						+ " for " + username.toString());
-				int id = getBookmarkId(bookmark, statement);
-				addUserBookmark(id, username.toString(), bookmark, statement);
-				connection.close();
-				return id;
+						+ " for " + username.toString() + " [response:"
+						+ response + "]");
 			}
+			int id = getBookmarkId(bookmark, statement);
+			addUserBookmark(id, username.toString(), bookmark, statement);
+			connection.close();
+			return id;
 
 		} catch (MySQLSyntaxErrorException e) {
 			e.printStackTrace();
@@ -173,27 +184,29 @@ public class UserUtils {
 		return -1;
 
 	}
-	
+
 	public static String getBookmarkName(Object username, String bookmark) {
 		Connection connection = null;
 		Statement statement = null;
 
-		String query = "SELECT * FROM userdb_" + username.toString() + " WHERE url='" + bookmark + "';";
-	
+		String query = "SELECT * FROM userdb_" + username.toString()
+				+ " WHERE url='" + bookmark + "';";
+
 		System.out.println("Building query: " + query);
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
 			ResultSet responseSet = statement.executeQuery(query);
 			String bookmarkName = "";
-			
+
 			if (responseSet.next()) {
 				bookmarkName = responseSet.getString(2);
-				System.out.println("Returning bookmark name " + bookmarkName + " for "
-						+ username.toString());
+				System.out.println("Returning bookmark name " + bookmarkName
+						+ " for " + username.toString());
 				return bookmarkName;
 			} else {
-				System.out.println("Unable to get bookmark name for " + bookmark);
+				System.out.println("Unable to get bookmark name for "
+						+ bookmark);
 				return "";
 			}
 
@@ -269,8 +282,7 @@ public class UserUtils {
 		Connection connection = null;
 		Statement statement = null;
 
-		String query = "SELECT * FROM userdb_"
-				+ username.toString() + ";";
+		String query = "SELECT * FROM userdb_" + username.toString() + ";";
 		System.out.println("Building query: " + query);
 		try {
 			connection = JDBCMySQLConnection.getConnection();
@@ -323,21 +335,37 @@ public class UserUtils {
 		Connection connection = null;
 		Statement statement = null;
 
-		String query = "SELECT * FROM bookmark_index WHERE url='" + bookmark + "';";
+		String query = "SELECT * FROM bookmark_index WHERE url='" + bookmark
+				+ "';";
 		System.out.println("Building query: " + query);
 		try {
 			connection = JDBCMySQLConnection.getConnection();
 			statement = connection.createStatement();
 			ResultSet responseSet = statement.executeQuery(query);
 			String imgPath = "";
-			
+
 			if (responseSet.next()) {
 				imgPath = responseSet.getString(4);
 				responseSet.close();
-			} 
-			if(imgPath == null || imgPath.isEmpty()){
+			}
+			if (imgPath == null || imgPath.isEmpty()) {
 				int bookmarkId = UserUtils.getBookmarkId(bookmark, statement);
-				imgPath = WebpageSnapshot.takeScreenshot(bookmark, "C:\\Users\\Seth\\git\\EnahncedBookmarks\\EnhancedBookmarks\\WebContent\\images\\"+ bookmarkId +".png");
+				imgPath = WebpageSnapshot
+						.takeScreenshot(
+								bookmark,
+								"C:\\Users\\Seth\\git\\EnahncedBookmarks\\EnhancedBookmarks\\WebContent\\images\\"
+										+ bookmarkId + ".png");
+				String query2 = "UPDATE bookmark_index SET img=\""
+						+ imgPath.replace("\\", "\\\\")
+						+ "\", imgUpdated=NOW() where url='" + bookmark + "';";
+				System.out.println("Building query: " + query2);
+				int responseInt = statement.executeUpdate(query2);
+				if (responseInt != 1) {
+					System.out.println("Unable to update img attributes for "
+							+ bookmark);
+				} else {
+					System.out.println("Img attributes added for " + bookmark);
+				}
 			}
 			return imgPath;
 
