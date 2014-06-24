@@ -4,7 +4,9 @@ import com.bookmarks.servlet.user.*;
 import com.bookmarks.servlet.snapshot.*;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +29,27 @@ public class BookmarkService extends HttpServlet {
     public BookmarkService() {
         super();
         System.out.println("Servlet Started");
+        String propertiesFilePath = "/";
+        System.out.println("Attempting to load Properties file: config.properties" );
+        loadProperties();
     }
+    
+    public void loadProperties(){
+		try {
+			String propertiesFile = "config.properties";
+			Properties properties = new Properties();
+			InputStream in = this.getClass().getResourceAsStream(propertiesFile);
+			properties.load(in);
+			for(String key : properties.stringPropertyNames()) {
+				  String value = properties.getProperty(key);
+				  System.out.println(key + " => " + value);
+				}
+			System.out.println("Properties file: " + propertiesFile + " loaded.");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)

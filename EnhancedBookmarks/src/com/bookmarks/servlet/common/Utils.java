@@ -1,6 +1,9 @@
 package com.bookmarks.servlet.common;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
+import java.util.Properties;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -39,5 +42,18 @@ public class Utils {
 		}
 		String output = jsonArray.toJSONString();
 		return output;
+	}
+	//String propertiesFile
+	public void loadPropertiesFile(){
+		try {
+			String propertiesFile = "config.properties";
+			Properties p = new Properties();
+			InputStream in = this.getClass().getResourceAsStream(propertiesFile);
+			p.load(in);
+			System.out.println("Properties file: " + propertiesFile + " loaded.");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
