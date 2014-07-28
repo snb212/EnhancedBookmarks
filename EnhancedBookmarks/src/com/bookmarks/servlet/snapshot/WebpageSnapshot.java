@@ -3,14 +3,13 @@ package com.bookmarks.servlet.snapshot;
 import java.io.IOException;
 import java.lang.ProcessBuilder;
 
+import com.bookmarks.servlet.common.BookmarkService;
+
 public class WebpageSnapshot {
 	public static String takeScreenshot(String url, String file) {
 	
-		String phantomjsHome = "C:\\Compiled Java Resources\\phantomjs-1.9.7-windows\\";
-		String phantomjsRasterizeScript = phantomjsHome + "bookmark-snap.js";
-		//String phantomjsRasterizeScript = phantomjsHome + "examples\\rasterize.js";
-		//String url = "http://google.com";
-		//String file = "C:\\Compiled Java Resources\\phantomjs-screenshots\\google.png";
+		String phantomjsHome = BookmarkService.PHANTOMJSHOME;
+		String phantomjsRasterizeScript = phantomjsHome + BookmarkService.PHANTOMRASTERIZE;
 
 		ProcessBuilder pb = new ProcessBuilder(phantomjsHome + "phantomjs", phantomjsRasterizeScript, url, file);
 		ProcessBuilder.Redirect error = pb.redirectError();
@@ -42,7 +41,7 @@ public class WebpageSnapshot {
 	}
 
 	private static boolean resizeImage(String file) {
-		ProcessBuilder pb = new ProcessBuilder("C:\\Compiled Java Resources\\ImageMagick-6.8.9\\ImageMagick-6.8.9-1-Q16-x64-dll.exe", "convert", file, "-resize 245x150", file);
+		ProcessBuilder pb = new ProcessBuilder(BookmarkService.IMAGE_RESIZER, "convert", file, "-resize 245x150", file);
 		ProcessBuilder.Redirect error = pb.redirectError();
 		ProcessBuilder.Redirect out = pb.redirectOutput();
 		ProcessBuilder.Redirect in = pb.redirectInput();

@@ -350,11 +350,8 @@ public class UserUtils {
 			}
 			if (imgPath == null || imgPath.isEmpty()) {
 				int bookmarkId = UserUtils.getBookmarkId(bookmark, statement);
-				imgPath = WebpageSnapshot
-						.takeScreenshot(
-								bookmark,
-								"C:\\Users\\Seth\\git\\EnahncedBookmarks\\EnhancedBookmarks\\WebContent\\images\\"
-										+ bookmarkId + ".png");
+				//imgPath = WebpageSnapshot.takeScreenshot(bookmark, "C:\\Users\\Seth\\git\\EnahncedBookmarks\\EnhancedBookmarks\\WebContent\\images\\" + bookmarkId + ".png");
+				imgPath = WebpageSnapshot.takeScreenshot(bookmark, BookmarkService.IMAGE_PATH + bookmarkId + ".png");
 				String query2 = "UPDATE bookmark_index SET img=\""
 						+ imgPath.replace("\\", "\\\\")
 						+ "\", imgUpdated=NOW() where url='" + bookmark + "';";

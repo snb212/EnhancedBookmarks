@@ -23,6 +23,14 @@ import org.apache.shiro.subject.Subject;
 @WebServlet(urlPatterns = {"/BookmarkService"}, name = "BookmarkService")
 public class BookmarkService extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static String IMAGE_PATH = "";
+	public static String PHANTOMJSHOME = "";
+	public static String PHANTOMRASTERIZE = "";
+	public static String IMAGE_RESIZER = "";
+	public static String MYSQL_URL = "";
+	public static String MYSQL_USER = "";
+	public static String MYSQL_PASSWORD = "";
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -42,8 +50,26 @@ public class BookmarkService extends HttpServlet {
 			properties.load(in);
 			for(String key : properties.stringPropertyNames()) {
 				  String value = properties.getProperty(key);
+				  
+				  switch(key) {
+				  	case "image-path": IMAGE_PATH = value; 
+				  		break;
+				  	case "phantomjsHome": PHANTOMJSHOME = value; 
+			  		break;
+				  	case "phantomRasterize": PHANTOMRASTERIZE = value; 
+			  		break;
+				  	case "image-resizer": IMAGE_RESIZER = value; 
+			  		break;
+				  	case "mysql-url": MYSQL_URL = value; 
+			  		break;
+				  	case "mysql-user": MYSQL_USER = value; 
+			  		break;
+				  	case "mysql-password": MYSQL_PASSWORD = value; 
+			  		break;				  
+				  }
 				  System.out.println(key + " => " + value);
 				}
+			System.out.println("IMAGE_PATH:" + IMAGE_PATH);
 			System.out.println("Properties file: " + propertiesFile + " loaded.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

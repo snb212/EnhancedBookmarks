@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.bookmarks.servlet.common.BookmarkService;
+
 public class JDBCMySQLConnection {
 	//static reference to itself
 	private static JDBCMySQLConnection instance = new JDBCMySQLConnection();
-	public static final String URL = "jdbc:mysql://localhost:3306/bookmark_users";
-	public static final String USER = "bookmarkAdmin";
-	public static final String PASSWORD = "password";
+	public static final String URL = BookmarkService.MYSQL_URL;
+	public static final String USER = BookmarkService.MYSQL_USER;
+	public static final String PASSWORD = BookmarkService.MYSQL_PASSWORD;
 	public static final String DRIVER_CLASS = "com.mysql.jdbc.Driver"; 
 	
 	//private constructor
